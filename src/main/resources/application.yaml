@@ -2,12 +2,15 @@ server:
   port: 8083
 
 spring:
+  jpa:
+    show-sql: true
   r2dbc:
     url: r2dbc:pool:postgres://localhost:5432/proselyte_webflux_security
     username: postgres
-    password: postgres
+    password: qwerty
   flyway:
     url: jdbc:postgresql://localhost:5432/proselyte_webflux_security
+    #расположение файлов для миграции базы данных
     locations: classpath:db/migration
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}

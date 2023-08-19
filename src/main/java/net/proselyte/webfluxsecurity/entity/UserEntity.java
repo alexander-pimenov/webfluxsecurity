@@ -23,6 +23,8 @@ public class UserEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    /*Эта маска для того, что бы в логах, или когда просто
+     применяем toString(), вместо пароля были звездочки.*/
     @ToString.Include(name = "password")
     private String maskPassword() {
         return "********";

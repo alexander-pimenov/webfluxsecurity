@@ -7,6 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * Класс расширяющий токен. Надстройка над токеном.
+ * Добавили еще
+ * Long userId - id пользователя
+ * Date issuedAt - когда выпустили токен
+ * Date expiresAt - когда притухнет токен
+ */
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
