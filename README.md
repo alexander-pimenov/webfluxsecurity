@@ -100,4 +100,16 @@ curl --location 'http://localhost:8083/api/v1/auth/info' \
 }
 ```
 
+### Тестировать можно также с помощью Postman.
+_Ниже показаны скриншоты примеров тестирования._
+
+![User registration](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/01_user_registration.png)
+
+![User login](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/02_user_login.png)
+
+![Get auth info user data](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/03_get_auth_info_user_data.png)
+
+![Image alt](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/04_re-register_and_get_error.png.png)
+
+
 Удачи и приятной работы!!!
