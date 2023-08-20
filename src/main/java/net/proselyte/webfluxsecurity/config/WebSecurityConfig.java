@@ -30,15 +30,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AuthenticationManager authenticationManager) {
         return http
+                //отключаем csrf
                 .csrf().disable()
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS)
                 .permitAll()
                 .pathMatchers(publicRoutes)
                 .permitAll()
+                //любой запрос должен быть аутентифицирован
                 .anyExchange()
                 .authenticated()
                 .and()
+                //добавляем фильтр для процесса аутентификации
                 .exceptionHandling()
                 .authenticationEntryPoint((swe , e) -> {
                     log.error("IN securityWebFilterChain - unauthorized error: {}", e.getMessage());

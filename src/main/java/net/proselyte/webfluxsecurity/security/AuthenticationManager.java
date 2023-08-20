@@ -9,6 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+/**
+ * Класс-менеджер аутентификации приложения.
+ */
 @Component
 @RequiredArgsConstructor
 public class AuthenticationManager implements ReactiveAuthenticationManager {
@@ -17,10 +20,14 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
+        //достаем из Authentication принципал (CustomPrincipal)
         CustomPrincipal principal = (CustomPrincipal) authentication.getPrincipal();
         return userService.getUserById(principal.getId())
+                //проверяем, что пользователь активный
                 .filter(UserEntity::isEnabled)
+                //если нет то кидаем исключение
                 .switchIfEmpty(Mono.error(new UnauthorizedException("User disabled")))
+                //если всё ОК, то мапим всё на аутентификацию
                 .map(user -> authentication);
     }
 }
