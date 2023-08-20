@@ -109,7 +109,7 @@ _Ниже показаны скриншоты примеров тестиров�
 
 ![Get auth info user data](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/03_get_auth_info_user_data.png)
 
-![Image alt](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/04_re-register_and_get_error.png.png)
+![Image alt](https://github.com/alexander-pimenov/webfluxsecurity/blob/master/img/04_re-register_and_get_error.png)
 
 
 Удачи и приятной работы!!!
