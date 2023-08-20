@@ -3,6 +3,7 @@ package net.proselyte.webfluxsecurity.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -13,6 +14,10 @@ import java.util.function.Function;
  * Класс-конвертер, который конвертирует запрос приходящий из вне
  * в аутентификацию.
  * Потом мы этот конвертер встраиваем в цепочку фильтров.
+ *
+ * В этом методе @see {AuthenticationWebFilter bearerAuthenticationFilter(AuthenticationManager authenticationManager)}
+ * мы создаем BearerTokenServerAuthenticationConverter через 'new', поэтому здесь не нужен
+ * '@Component' над классом.
  */
 @RequiredArgsConstructor
 public class BearerTokenServerAuthenticationConverter implements ServerAuthenticationConverter {

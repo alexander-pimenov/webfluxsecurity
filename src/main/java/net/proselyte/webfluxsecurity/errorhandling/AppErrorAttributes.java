@@ -25,6 +25,13 @@ public class AppErrorAttributes extends DefaultErrorAttributes {
         super();
     }
 
+    /**
+     * Переопределенный метод для обработки ошибок.
+     *
+     * @param request the source request
+     * @param options options for error attribute contents
+     * @return данные по ошибкам
+     */
     @Override
     public Map<String, Object> getErrorAttributes(ServerRequest request, ErrorAttributeOptions options) {
         var errorAttributes = super.getErrorAttributes(request, ErrorAttributeOptions.defaults());
@@ -33,7 +40,7 @@ public class AppErrorAttributes extends DefaultErrorAttributes {
         var errorList = new ArrayList<Map<String, Object>>();
 
         if (error instanceof AuthException || error instanceof UnauthorizedException
-               || error instanceof ExpiredJwtException || error instanceof SignatureException || error instanceof MalformedJwtException) {
+                || error instanceof ExpiredJwtException || error instanceof SignatureException || error instanceof MalformedJwtException) {
             status = HttpStatus.UNAUTHORIZED;
             var errorMap = new LinkedHashMap<String, Object>();
             errorMap.put("code", ((ApiException) error).getErrorCode());

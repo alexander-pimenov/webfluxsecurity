@@ -21,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SecurityService {
 
+    //инжектим два объекта UserService, PasswordEncoder
     private final UserService userService;
     private final PasswordEncoder passwordEncoder; //для работы с закодированным паролем
 

@@ -12,7 +12,7 @@ public interface UserMapper {
     //это прямой метод
     UserDto map(UserEntity userEntity);
 
-        //это обратный метод
+    //это обратный метод
     @InheritInverseConfiguration
     UserEntity map(UserDto dto);
 }

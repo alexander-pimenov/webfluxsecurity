@@ -17,21 +17,40 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthRestControllerV1 {
+    //инжектим три объекта SecurityService, UserService, UserMapper
     private final SecurityService securityService;
     private final UserService userService;
     private final UserMapper userMapper;
 
-
+    /**
+     * Метод регистрации пользователя.
+     *
+     * @param dto dto входящего пользователя
+     * @return зарегистрированный пользователь завернутый в Mono
+     */
     @PostMapping("/register")
     public Mono<UserDto> register(@RequestBody UserDto dto) {
+        //создаем объект энтити для дальнейшего сохранения в БД, используя маппер и метод map
         UserEntity entity = userMapper.map(dto);
+        //сохраняем энтити в БД и возвращаем в ответе dto пользователя
         return userService.registerUser(entity)
                 .map(userMapper::map);
     }
 
+    /**
+     * Метод вход пользователя по логину.
+     *
+     * @param dto данные пользователя username и password
+     * @return dto аутентификации пользователя
+     */
+
     @PostMapping("/login")
     public Mono<AuthResponseDto> login(@RequestBody AuthRequestDto dto) {
+        //просим securityService аутентифицировать пользователя на основании
+        //его username и password
         return securityService.authenticate(dto.getUsername(), dto.getPassword())
+                //если всё ОК, то возвращается расширенный токен
+                //и мы из него создаем dto аутентификации пользователя для ответа
                 .flatMap(tokenDetails -> Mono.just(
                         AuthResponseDto.builder()
                                 .userId(tokenDetails.getUserId())
@@ -42,6 +61,12 @@ public class AuthRestControllerV1 {
                 ));
     }
 
+    /**
+     * Метод отдающий инфо по пользователю.
+     *
+     * @param authentication аутентификация из контекста (поэтому не нужно добавлять @RequestBody)
+     * @return dto пользователя обернутый в Mono
+     */
     @GetMapping("/info")
     public Mono<UserDto> getUserInfo(Authentication authentication) {
         CustomPrincipal customPrincipal = (CustomPrincipal) authentication.getPrincipal();

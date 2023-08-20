@@ -25,7 +25,12 @@ public class WebSecurityConfig {
     @Value("${jwt.secret}")
     private String secret;
 
-    private final String [] publicRoutes = {"/api/v1/auth/register", "/api/v1/auth/login"};
+    /**
+     * Публичные роуты, к которым имеем доступ:
+     * - эндпоинт регистрации
+     * - эндпоинт аутентификации
+     */
+    private final String[] publicRoutes = {"/api/v1/auth/register", "/api/v1/auth/login"};
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http, AuthenticationManager authenticationManager) {
@@ -33,33 +38,52 @@ public class WebSecurityConfig {
                 //отключаем csrf
                 .csrf().disable()
                 .authorizeExchange()
+                //говорим, что разрешаем OPTIONS запросы всем
                 .pathMatchers(HttpMethod.OPTIONS)
                 .permitAll()
+                //говорим, что публичные запросы, указанные в массиве, разрешаем всем
                 .pathMatchers(publicRoutes)
                 .permitAll()
                 //любой запрос должен быть аутентифицирован
                 .anyExchange()
                 .authenticated()
                 .and()
-                //добавляем фильтр для процесса аутентификации
+                //обработаем ошибки
                 .exceptionHandling()
-                .authenticationEntryPoint((swe , e) -> {
+                // - если ошибка на энтрипоинте
+                .authenticationEntryPoint((swe, e) -> {
                     log.error("IN securityWebFilterChain - unauthorized error: {}", e.getMessage());
                     return Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED));
                 })
+                // - если доступ не разрешен
                 .accessDeniedHandler((swe, e) -> {
                     log.error("IN securityWebFilterChain - access denied: {}", e.getMessage());
-
                     return Mono.fromRunnable(() -> swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN));
                 })
                 .and()
+                //добавляем фильтр для процесса аутентификации и его порядок - аутентификация
                 .addFilterAt(bearerAuthenticationFilter(authenticationManager), SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 
+    /**
+     * Реализуем свой AuthenticationWebFilter и добавляем этот фильтр в цепочку
+     * для процесса аутентификации.
+     *
+     * @param authenticationManager authenticationManager
+     * @return AuthenticationWebFilter
+     */
     private AuthenticationWebFilter bearerAuthenticationFilter(AuthenticationManager authenticationManager) {
+        //создаем AuthenticationWebFilter
         AuthenticationWebFilter bearerAuthenticationFilter = new AuthenticationWebFilter(authenticationManager);
-        bearerAuthenticationFilter.setServerAuthenticationConverter(new BearerTokenServerAuthenticationConverter(new JwtHandler(secret)));
+
+        //создаваемый фильтр принимает в себя конвертер BearerTokenServerAuthenticationConverter
+        bearerAuthenticationFilter.setServerAuthenticationConverter(
+                new BearerTokenServerAuthenticationConverter(
+                        new JwtHandler(secret) //хендлер с секретом
+                )
+        );
+        //говорим, что это фильтр применяется для всех входящих запросов, которые у нас есть.
         bearerAuthenticationFilter.setRequiresAuthenticationMatcher(ServerWebExchangeMatchers.pathMatchers("/**"));
 
         return bearerAuthenticationFilter;

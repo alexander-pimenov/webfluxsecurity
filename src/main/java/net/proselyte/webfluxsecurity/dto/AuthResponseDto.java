@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * DTO аутентификации пользователя для ответа отдаваемый наружу.
+ */
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor

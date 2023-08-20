@@ -14,6 +14,9 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+/**
+ * Класс обработчик ошибок.
+ */
 @Component
 public class AppErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
     public AppErrorWebExceptionHandler(AppErrorAttributes g, ApplicationContext applicationContext, ServerCodecConfigurer serverCodecConfigurer) {
